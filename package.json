@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "lint-staged": {
-    "**/*.{js,ts,jsx,tsx}": [
+    "**/*.{js,ts,jsx,tsx,cjs}": [
       "npx eslint",
       "prettier --write"
     ],
