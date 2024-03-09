@@ -5,13 +5,12 @@ module.exports = {
     commonjs: true, 
     es2020: true 
   },
-  extends: [    
-    'standard',
+  extends: [
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
-    "airbnb-base",
+    "airbnb",
     "prettier",
   ],
   overrides: [
@@ -35,6 +34,13 @@ module.exports = {
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
+    ],
+    "import/extensions": [
+      "error",
+       "ignorePackages",
+       {         
+         "jsx": "always",
+       }
     ],
   },
 }
