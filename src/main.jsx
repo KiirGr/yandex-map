@@ -5,16 +5,18 @@ import CustomSearch from "./CustomSearch";
 import App from "./App";
 import "./index.css";
 
-ymaps.ready(init);
-  function init(){
-    var myMap = new ymaps.Map("map", {
+  const init = () => {
+    const myMap = new ymaps.Map("map", {
         center: [55.76, 37.64],
         zoom: 13
     });
-    var suggestView1 = new ymaps.SuggestView('suggest');
+    const suggestView1 = new ymaps.SuggestView('suggest');    
+     
   }
 
-  function Parent(){
+  ymaps.ready(init);
+
+  const Parent = (myMap) => {
 
     const [adressCoordinates, setAdressCoordinates] = useState('')
 
@@ -22,7 +24,7 @@ ymaps.ready(init);
       setAdressCoordinates(childdata);
     }
 
-    console.log(" долгота: "+adressCoordinates[0]+" широта: "+adressCoordinates[1]);
+    console.log(" долгота: "+adressCoordinates[0]+" широта: "+adressCoordinates[1]);    
 
     return (
       <div className="App">

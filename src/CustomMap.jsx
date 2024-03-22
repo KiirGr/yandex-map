@@ -1,10 +1,17 @@
 import React from "react";
 
-function CustomMap() {
+const CustomMap = () => {
+
+  const width = 600
+  const height = 400
+  const dimensions = {
+    width: `${width}px`,
+    height: `${height}px`
+  }
 
   return (
     <>      
-      <div id="map" style={{width: 600 + 'px', height: 400 + 'px'}}></div>
+      <div id="map" style={dimensions}></div>
     </>
   );
 }
