@@ -1,25 +1,27 @@
-import React, {useState, useRef, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import ReactDOM from "react-dom/client";
-// import CustomMap from "./CustomMap";
 import CustomSearch from "./CustomSearch";
-import App from "./App";
 import "./index.css";
+import "./App.css";
+
+const ymapsVar = window.ymaps;
 
  // FIXME: move to `CustomMap` component, use with `useRef` hook and add points from properties (`points` prop)
  let myMap;
 
   // FIXME: move `init` logic to <CustomMap /> component, subscribe to `ymaps.ready` event in the component using `useEffect` hook
   // use `useRef` to memoize element to render map in
-  let init = () => {
-    myMap = new ymaps.Map("map", {
+  const init = () => {
+    myMap = new ymapsVar.Map("map", {
         center: [55.76, 37.64],
         zoom: 13
     });
-    const suggestView1 = new ymaps.SuggestView('suggest');   
+    const suggestView = new ymapsVar.SuggestView('suggest');
 
+    return suggestView;
   }
 
-  ymaps.ready(init);
+  ymapsVar.ready(init);
 
   // TODO: pass `width` and `height` as props to <CustomMap /> component
   const CustomMap = () => {
@@ -31,22 +33,20 @@ import "./index.css";
       height: `${height}px`
     }
 
-    // FIXME: useless fragment here, leave just `div` because it doesn't have any sibling element
+    // +++DONE+++ FIXME: useless fragment here, leave just `div` because it doesn't have any sibling element
     return (
-      <>
-        <div id="map" style={dimensions}></div>
-      </>
+        <div id="map" style={dimensions}/>
     );
   }
 
-  // FIXME: rename to <App /> because it's not obvious what Parent means and which kind of children it has
-  const Parent = () => {
+  // +++DONE+++ FIXME: rename to <App /> because it's not obvious what Parent means and which kind of children it has
+  const App = () => {
     
     const [adressCoordinates, setAdressCoordinates] = useState('');
     const [cordArr, setCordValue] = useState([]);    
 
     // FIXME: rename event handler to `on<eventName>` format or `handle<eventName>` format
-    const childToParent = (childdata) => {
+    const childToApp = (childdata) => {
       setAdressCoordinates(childdata);      
     }
 
@@ -60,24 +60,24 @@ import "./index.css";
     if (typeof adressCoordinates[0] !== "undefined"){
         myMap.geoObjects.removeAll();
         // Создание геообъекта с типом точка (метка).
-        // FIXME: use `let` instead of `var`
-        var myPlacemark = new ymaps.Placemark([adressCoordinates[0], adressCoordinates[1]]);
+        // +++DONE+++ FIXME: use `let` instead of `var`
+        const myPlacemark = new ymapsVar.Placemark([adressCoordinates[0], adressCoordinates[1]]);
         
         // Размещение геообъекта на карте.
-        myMap.geoObjects.add(myPlacemark);                          
+        myMap.geoObjects.add(myPlacemark);
 
-          console.log(cordArr.length);
           if (cordArr.length >= 2){
 
-            ymaps.route(cordArr, {
+            ymapsVar.route(cordArr, {
               multiRoute: false
-            }).done(function (route) {
+            }).done((route) => {
                 route.options.set("mapStateAutoApply", true);
                 myMap.geoObjects.add(route);
-            }, function (err) {
-                // FIXME: don't throw an error, render error message instead (e.g. just paragraph with the error text)
+            }, (err) => {
+                // +++DONE+++ FIXME: don't throw an error, render error message instead (e.g. just paragraph with the error text)
                 // err.message or write your own message
-                throw err;
+                const errorMsg = `Произошла ошибка: ${err}`;
+                alert(errorMsg);
             }, this);
 
           }
@@ -91,16 +91,15 @@ import "./index.css";
       <div className="App">
         {/* {adressCoordinates} */}
         <div>
-          <CustomSearch childToParent={childToParent}/>
+          <CustomSearch childToApp={childToApp}/>
           <CustomMap/>
         </div>
       </div>
     );
   }  
 
-  // FIXME: we don't need to export anything from `main.jsx` entry point because we render application here, nothing more
-  export default Parent;
+  // +++DONE+++ FIXME: we don't need to export anything from `main.jsx` entry point because we render application here, nothing more
 
 ReactDOM.createRoot(document.getElementById("root")).render(  
-    <Parent/>
+    <App/>
 );
