@@ -1,15 +1,22 @@
-import React from "react";
+import React , {useState, useEffect} from "react";
 
 function CustomSearch({childToApp}) {
 
   const ymapsVar = window.ymaps;
+  const [inputValue, setInputValue] = useState('');
   
   const handleSubmit = (event) => {
     event.preventDefault()
+    // +++DONE+++ FIXME: store input's value in the component's state
+    setInputValue(event.target.suggest.value);    
+  }
 
-    // FIXME: store input's value in the component's state
-    const myGeocoder = ymapsVar.geocode(event.target.suggest.value);
-    myGeocoder
+  useEffect(() => {
+
+    if (inputValue) {
+      const resultCoordinates = ymapsVar.geocode(inputValue);
+      
+      resultCoordinates
       .then(
          // +++DONE+++ FIXME: use separated callbacks properties for positive and negative cases
         res => {
@@ -17,7 +24,9 @@ function CustomSearch({childToApp}) {
         }        
       )
       .catch(err => childToApp(`Произошла ошибка: ${err}`))
-  }
+    }
+
+  }, [inputValue])
 
   return (
       <form onSubmit={handleSubmit}>

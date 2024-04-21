@@ -23,14 +23,11 @@ const ymapsVar = window.ymaps;
 
   ymapsVar.ready(init);
 
-  // TODO: pass `width` and `height` as props to <CustomMap /> component
-  function CustomMap() {
-
-    const width = 600
-    const height = 400
+  // +++DONE+++ TODO: pass `width` and `height` as props to <CustomMap /> component
+  function CustomMap({size}) {    
     const dimensions = {
-      width: `${width}px`,
-      height: `${height}px`
+      width: `${size.width}`,
+      height: `${size.height}`
     }
 
     // +++DONE+++ FIXME: useless fragment here, leave just `div` because it doesn't have any sibling element
@@ -45,8 +42,8 @@ const ymapsVar = window.ymaps;
     const [adressCoordinates, setAdressCoordinates] = useState('');
     const [cordArr, setCordValue] = useState([]);    
 
-    // FIXME: rename event handler to `on<eventName>` format or `handle<eventName>` format
-    const childToApp = (childdata) => {
+    // +++DONE+++ FIXME: rename event handler to `on<eventName>` format or `handle<eventName>` format
+    const handleTransferCoordinates = (childdata) => {
       setAdressCoordinates(childdata);      
     }
 
@@ -91,8 +88,8 @@ const ymapsVar = window.ymaps;
       <div className="App">
         {/* {adressCoordinates} */}
         <div>
-          <CustomSearch childToApp={childToApp}/>
-          <CustomMap/>
+          <CustomSearch childToApp={handleTransferCoordinates}/>
+          <CustomMap size={{ width: '600px',  height: '400px'}}/>
         </div>
       </div>
     );
