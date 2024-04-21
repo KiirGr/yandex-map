@@ -1,6 +1,6 @@
 import React from "react";
 
-const CustomSearch = ({childToApp}) => {
+function CustomSearch({childToApp}) {
 
   const ymapsVar = window.ymaps;
   

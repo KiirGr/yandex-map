@@ -24,7 +24,7 @@ const ymapsVar = window.ymaps;
   ymapsVar.ready(init);
 
   // TODO: pass `width` and `height` as props to <CustomMap /> component
-  const CustomMap = () => {
+  function CustomMap() {
 
     const width = 600
     const height = 400
@@ -40,7 +40,7 @@ const ymapsVar = window.ymaps;
   }
 
   // +++DONE+++ FIXME: rename to <App /> because it's not obvious what Parent means and which kind of children it has
-  const App = () => {
+  function App() {
     
     const [adressCoordinates, setAdressCoordinates] = useState('');
     const [cordArr, setCordValue] = useState([]);    
