@@ -7,8 +7,7 @@ function CustomSearch({childToApp}) {
   
   const handleSubmit = (event) => {
     event.preventDefault()
-    // +++DONE+++ FIXME: store input's value in the component's state
-    setInputValue(event.target.suggest.value);    
+    setInputValue(event.target.suggest.value);
   }
 
   useEffect(() => {
@@ -18,7 +17,6 @@ function CustomSearch({childToApp}) {
       
       resultCoordinates
       .then(
-         // +++DONE+++ FIXME: use separated callbacks properties for positive and negative cases
         res => {
           childToApp(res.geoObjects.get(0).geometry.getCoordinates());
         }        
