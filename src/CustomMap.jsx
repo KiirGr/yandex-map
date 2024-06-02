@@ -60,7 +60,7 @@ function CustomMap({ size, points = [] }) {
 
   return (
     <div id="map" style={dimensions}>
-      <button onClick={clearMap}>Очистить карту</button>
+      <button type="button" onClick={clearMap}>Очистить карту</button>
     </div>    
   );
 }
