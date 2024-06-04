@@ -43,7 +43,26 @@ function CustomMap({ size, points = [] }) {
 
       alert(errorMsg);
     }, this);
-    // TODO: center map here - +++ It works already +++
+    // TODO: center map here - +++ It works already +++    
+  }
+
+  const pointsList = async () => {
+    points.forEach(element => {
+
+      const ymapsVar1 = window.ymaps;
+      const resultCoordinates = ymapsVar1.geocode([element[0],element[1]],{kind: 'street'});
+
+      resultCoordinates
+      .then(
+        res => {
+          const nearest = res.geoObjects.get(0);    
+          const name = nearest.properties.get('name');
+          console.log("широта-"+element[0]+" долгота-"+element[1]+" наименование объекта-"+name);
+        }        
+      )
+      .catch(err => `Произошла ошибка: ${err}`)
+    });    
+    
   }
 
   const clearMap = () => {
@@ -56,6 +75,9 @@ function CustomMap({ size, points = [] }) {
   }, [])
   useEffect(() => {
     drawMapPoints()
+  }, [points])
+  useEffect(() => {
+    pointsList()
   }, [points])
 
   return (
