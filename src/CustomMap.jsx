@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 function CustomMap({ size, points = [] }) {
   const myMap = useRef(null);
@@ -46,23 +46,28 @@ function CustomMap({ size, points = [] }) {
     // TODO: center map here - +++ It works already +++    
   }
 
+  const [pointsListArrays, setPointsListArr] = useState([]);
+
   const pointsList = async () => {
+    const ymapsVar1 = window.ymaps;
+
     points.forEach(element => {
-
-      const ymapsVar1 = window.ymaps;
       const resultCoordinates = ymapsVar1.geocode([element[0],element[1]],{kind: 'street'});
-
+      
       resultCoordinates
       .then(
         res => {
           const nearest = res.geoObjects.get(0);    
           const name = nearest.properties.get('name');
-          console.log("широта-"+element[0]+" долгота-"+element[1]+" наименование объекта-"+name);
+          
+          // adressString = "широта-"+element[0]+" долгота-"+element[1]+" наименование объекта-"+name;
+          // adressString.concat([" наименование объекта-"+name]);
+          setPointsListArr(pointsListArrays.concat([" наименование объекта-"+name]));
+          
         }        
       )
-      .catch(err => `Произошла ошибка: ${err}`)
-    });    
-    
+      .catch(err => `Произошла ошибка: ${err}`)      
+    });
   }
 
   const clearMap = () => {
@@ -79,11 +84,15 @@ function CustomMap({ size, points = [] }) {
   useEffect(() => {
     pointsList()
   }, [points])
+  console.log(pointsListArrays);
 
   return (
     <div id="map" style={dimensions}>
       <button type="button" onClick={clearMap}>Очистить карту</button>
-    </div>    
+      <span>
+        {pointsListArrays}
+      </span>
+    </div>
   );
 }
 
