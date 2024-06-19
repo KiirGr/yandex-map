@@ -20,17 +20,34 @@ function CustomMap({ size, points = [] }) {
       return;
     }
 
-    // TODO: remove all points from the map +++DONE+++
     myMap.current.geoObjects.removeAll();
 
     if (points.length === 1) {
       const placemark = new window.ymaps.Placemark(points[0]);
 
      myMap.current.geoObjects.add(placemark);
-      // TODO: center map here +++DONE+++
       myMap.current.setCenter(points[0]);
       return;
     }
+
+    if (points.length === 3) {
+
+      points.slice(1, 1)
+
+      window.ymaps.route(points, {
+        multiRoute: false
+      }).done((route) => {
+        route.options.set("mapStateAutoApply", true);
+        myMap.current.geoObjects.add(route);
+      }, (err) => {
+        // err.message or write your own message
+        const errorMsg = `Произошла ошибка: ${err}`;
+  
+        alert(errorMsg);
+      }, this);
+
+    }
+
 
     window.ymaps.route(points, {
       multiRoute: false
@@ -43,37 +60,20 @@ function CustomMap({ size, points = [] }) {
 
       alert(errorMsg);
     }, this);
-    // TODO: center map here - +++ It works already +++    
-  }
-
-  const [pointsListArrays, setPointsListArr] = useState([]);
-
-  const pointsList = async () => {
-    const ymapsVar1 = window.ymaps;
-
-    points.forEach(element => {
-      const resultCoordinates = ymapsVar1.geocode([element[0],element[1]],{kind: 'street'});
-      
-      resultCoordinates
-      .then(
-        res => {
-          const nearest = res.geoObjects.get(0);    
-          const name = nearest.properties.get('name');
-          
-          // adressString = "широта-"+element[0]+" долгота-"+element[1]+" наименование объекта-"+name;
-          // adressString.concat([" наименование объекта-"+name]);
-          setPointsListArr(pointsListArrays.concat([" наименование объекта-"+name]));
-          
-        }        
-      )
-      .catch(err => `Произошла ошибка: ${err}`)      
-    });
-  }
+  }  
 
   const clearMap = () => {
-    myMap.current.geoObjects.removeAll();
-    points.length=0;
-  }
+    // myMap.current.geoObjects.removeAll();
+    // points.length=0;    
+    // debugger    
+    
+    // const myGeoObjects = new window.ymaps.GeoObjectCollection();
+    // myGeoObjects.add(new window.ymaps.Placemark([13.38, 52.81]));
+    // myMap.current.geoObjects.add(myGeoObjects);
+    // myMap.current.setBounds(myGeoObjects.getBounds());
+    // myGeoObjects.splice(1, 1);
+    // debugger
+  }  
 
   useEffect(() => {
     window.ymaps.ready(initMap);
@@ -81,17 +81,13 @@ function CustomMap({ size, points = [] }) {
   useEffect(() => {
     drawMapPoints()
   }, [points])
-  useEffect(() => {
-    pointsList()
-  }, [points])
-  console.log(pointsListArrays);
 
   return (
     <div id="map" style={dimensions}>
       <button type="button" onClick={clearMap}>Очистить карту</button>
-      <span>
+      {/* <span>
         {pointsListArrays}
-      </span>
+      </span> */}
     </div>
   );
 }
