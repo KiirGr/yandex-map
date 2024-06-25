@@ -30,9 +30,59 @@ function CustomMap({ size, points = [] }) {
       return;
     }
 
-    if (points.length === 3) {
+    window.ymaps.route(points, {
+      multiRoute: false
+    }).done((route) => {
+      route.options.set("mapStateAutoApply", true);
+      myMap.current.geoObjects.add(route);
+    }, (err) => {
+      // err.message or write your own message
+      const errorMsg = `Произошла ошибка: ${err}`;
 
-      points.slice(1, 1)
+      alert(errorMsg);
+    }, this);
+  }  
+
+  const clearMap = () => {
+    myMap.current.geoObjects.removeAll();
+    points.length=0;    
+  }
+
+  const [deletePoint, setDeletedPoint] = useState('');
+  const deletePointSubmit = (event) => {
+    event.preventDefault();
+    setDeletedPoint(event.target.pointNumber.value);
+  }
+
+  const deleteMapPoints = async () => {
+
+    if (points.length === 0) {
+      return;
+    }
+
+    setDeletedPoint('');
+
+    if (deletePoint) {
+
+      if (points.length === 1) {
+        myMap.current.geoObjects.removeAll();
+        points.length=0;
+        return;
+      } else if (points.length === 2) {
+
+        myMap.current.geoObjects.removeAll();
+        points.splice(deletePoint, 1);
+        
+        const placemark = new window.ymaps.Placemark(points[0]);
+        myMap.current.geoObjects.add(placemark);
+        myMap.current.setCenter(points[0]);
+        return;
+
+      }
+
+      points.splice(deletePoint, 1);
+
+      myMap.current.geoObjects.removeAll();
 
       window.ymaps.route(points, {
         multiRoute: false
@@ -48,42 +98,23 @@ function CustomMap({ size, points = [] }) {
 
     }
 
-
-    window.ymaps.route(points, {
-      multiRoute: false
-    }).done((route) => {
-      route.options.set("mapStateAutoApply", true);
-      myMap.current.geoObjects.add(route);
-    }, (err) => {
-      // err.message or write your own message
-      const errorMsg = `Произошла ошибка: ${err}`;
-
-      alert(errorMsg);
-    }, this);
   }  
-
-  const clearMap = () => {
-    // myMap.current.geoObjects.removeAll();
-    // points.length=0;    
-    // debugger    
-    
-    // const myGeoObjects = new window.ymaps.GeoObjectCollection();
-    // myGeoObjects.add(new window.ymaps.Placemark([13.38, 52.81]));
-    // myMap.current.geoObjects.add(myGeoObjects);
-    // myMap.current.setBounds(myGeoObjects.getBounds());
-    // myGeoObjects.splice(1, 1);
-    // debugger
-  }  
-
   useEffect(() => {
     window.ymaps.ready(initMap);
   }, [])
   useEffect(() => {
     drawMapPoints()
   }, [points])
+  useEffect(() => {
+    deleteMapPoints()
+  }, [deletePoint, points])
 
   return (
     <div id="map" style={dimensions}>
+      <form onSubmit={deletePointSubmit}>
+        <input type="text" id="pointNumber" />
+        <button type="submit">Удалить точку</button>
+      </form>
       <button type="button" onClick={clearMap}>Очистить карту</button>
       {/* <span>
         {pointsListArrays}
