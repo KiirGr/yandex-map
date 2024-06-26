@@ -121,9 +121,6 @@ function CustomMap({ size, points = [] }) {
         <button type="submit">Удалить точку</button>
       </form>
       <button type="button" onClick={clearMap}>Очистить карту</button>
-      {/* <span>
-        {pointsListArrays}
-      </span> */}
     </div>
   );
 }
