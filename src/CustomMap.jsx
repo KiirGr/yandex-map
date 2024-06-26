@@ -64,6 +64,11 @@ function CustomMap({ size, points = [] }) {
 
     if (deletePoint) {
 
+      const addressList = document.getElementById('address_list');
+      const addressToKill = addressList.childNodes[deletePoint];
+      addressToKill.parentNode.removeChild( addressToKill );
+
+
       if (points.length === 1) {
         myMap.current.geoObjects.removeAll();
         points.length=0;

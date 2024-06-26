@@ -23,7 +23,7 @@ function CustomSearch({childToApp}) {
           // const geoObject = res.geoObjects.get(0);
           // console.log(res.geoObjects.properties);
           // debugger
-          setPointsListArr(pointsListArrays.concat(["<p>Наименование объекта-"+res.geoObjects.get(0).properties._data.text+"</p>"]));          
+          setPointsListArr(pointsListArrays.concat([{name: "Наименование объекта-"+res.geoObjects.get(0).properties._data.text}]));          
           childToApp(res.geoObjects.get(0).geometry.getCoordinates());
         }        
       )
@@ -32,11 +32,16 @@ function CustomSearch({childToApp}) {
 
   }, [inputValue])
 
+  const rows = pointsListArrays.map(function(item, index) {
+    return <p key={index}>{item.name}</p>;
+  });
+
   return (
       <form onSubmit={handleSubmit}>
         <input type="text" id="suggest" />
         <button type="submit">Отправить</button>
-        <div dangerouslySetInnerHTML={{ __html: pointsListArrays }} />
+        {/* <div id="address_list" dangerouslySetInnerHTML={{ __html: pointsListArrays }} /> */}
+        <div id="address_list">{rows}</div>
       </form>
   );
 }
