@@ -10,6 +10,8 @@ function CustomSearch({childToApp}) {
     setInputValue(event.target.suggest.value);
   }
 
+  const [pointsListArrays, setPointsListArr] = useState([]);
+
   useEffect(() => {
 
     if (inputValue) {
@@ -18,6 +20,7 @@ function CustomSearch({childToApp}) {
       resultCoordinates
       .then(
         res => {
+          setPointsListArr(pointsListArrays.concat([{name: "Наименование объекта-"+res.geoObjects.get(0).properties._data.text}]));          
           childToApp(res.geoObjects.get(0).geometry.getCoordinates());
         }        
       )
@@ -26,10 +29,15 @@ function CustomSearch({childToApp}) {
 
   }, [inputValue])
 
+  const rows = pointsListArrays.map(function(item, index) {
+    return <p key={index}>{item.name}</p>;
+  });
+
   return (
       <form onSubmit={handleSubmit}>
         <input type="text" id="suggest" />
         <button type="submit">Отправить</button>
+        <div id="address_list">{rows}</div>
       </form>
   );
 }
